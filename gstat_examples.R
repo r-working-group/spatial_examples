@@ -2,6 +2,10 @@ library(sp)  #for example dataset
 library(gstat) #for spatial interpolation
 library(tidyverse) #just for some piping
 
+## For a similar vignette, check out:
+## https://cran.r-project.org/web/packages/gstat/vignettes/gstat.pdf
+
+
 ### Read in example data and make spatial objects
 # Point data of field measurements
 data(meuse)
@@ -11,14 +15,15 @@ data(meuse.grid)
 gridded(meuse.grid) = ~x+y
 
 ### Visualize the data available
-spplot(meuse, "zinc")
-spplot(meuse.grid)
+spplot(meuse, "zinc") 
+hist(meuse$zinc)
+spplot(meuse.grid) 
 
 #######
 ### 0. Inverse-distance weighting
 #######
 idw_interp <- idw(log(zinc)~1, meuse, meuse.grid)
-spplot(idw_interp["var1.pred"], main = "IDW predictions")
+spplot(idw_interp["var1.pred"], main = "IDW predictions") 
 
 #######
 ### 1. Fitting the variogram
@@ -54,10 +59,10 @@ spplot(simp_krig_interp["var1.var"],  main = "simple kriging variance")
 # e.g. kriging PPT while also including PPT ~ elevation relationship
 # The variogram should be based on residuals instead of observations
 # residual variogram:
-vgm_res <- variogram(log(zinc)~x+y, meuse) %>%
+vgm_res <- variogram(log(zinc)~dist, meuse) %>%
   fit.variogram(vgm("Sph"))
 # and then just include covariates in formula;
-univ_krig_interp <- krige(log(zinc)~x+y, meuse, meuse.grid, model = vgm_res)
+univ_krig_interp <- krige(log(zinc)~dist, meuse, meuse.grid, model = vgm_res)
 spplot(univ_krig_interp["var1.pred"], main = "universal kriging predictions")
 
 
