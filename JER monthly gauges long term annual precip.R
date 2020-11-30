@@ -2,7 +2,9 @@
 ## Spatial interpolation of Jornada precipitation
 ## R Work Group 11/30
 ## Written by Darren James and Heather Savoy
+## If you want the data to run this script, ask Darren
 ##############
+
 
 
 library(tidyverse)
@@ -157,7 +159,7 @@ DEM.grid <- DEM.import %>%
 
 # Now perform the universal kriging
 # This is time consuming! Note that the entext matches earlier examples, but the
-# resolution is much finer: 5655x4315 vs 100x100
+# resolution is much finer: 5655x4315 vs 445x493
 system.time(univ_krig_interp <- krige(precip~JER_CDRRC_DEM,
                                       long.term.annual.means.shp,
                                       DEM.grid,
